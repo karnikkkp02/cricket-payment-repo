@@ -34,8 +34,7 @@
 
 .cricket-logo {
   width: 150px;
-  height: auto;
-  margin-bottom: 1.5rem;
+  height: 150px;
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -165,6 +164,61 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+.error-messages {
+  color: red !important;
+  font-size: 10px;
+  margin: 0;
+}
+
+
+.form-style{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.file-upload {
+  margin-top: 1rem;
+}
+
+.file-upload label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.file-upload input[type="file"] {
+  font-size: 1rem;
+}
+
+.file-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.file-info span {
+  font-size: 1rem;
+}
+
+.remove-file {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+
+.radio-tick{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+
 
 /* Mobile Responsive for Form Elements */
 @media (max-width: 480px) {

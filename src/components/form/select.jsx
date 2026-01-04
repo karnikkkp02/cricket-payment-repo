@@ -1,47 +1,18 @@
-import React from "react";
-import "./input.css";
+import Select from "react-select";
+import { forwardRef } from "react";
+import { DropdownIndicator } from "../dropdownIndicator";
 
-const CustomSelect = ({
-  label,
-  options,
-  value,
-  onChange,
-  placeholder = "",
-  name,
-  id,
-  className = "",
-  error,
-  ...rest
-}) => {
+ const CustomSelect = forwardRef((props, ref) => {
+  const { label, showError, errorMessage, parentInlineStyle, ...rest } = props;
   return (
-    <div className="input-wrapper">
-      {label && (
-        <label htmlFor={id || name} className="input-label">
-          {label}
-        </label>
-      )}
-
-      <select
-        id={id || name}
-        value={value}
-        onChange={onChange}
-        name={name}
-        className={`common-select ${error ? "input-error" : ""} ${className}`}
-        {...rest}
-      >
-        <option value="" disabled>
-          {placeholder || "Select an option"}
-        </option>
-        {options.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-
-      {error && <span className="error-text">{error}</span>}
+    <div className="inputContainer" style={parentInlineStyle}>
+      <label htmlFor={label} className="label">
+        {label}
+      </label>
+      <Select components={{ DropdownIndicator }} ref={ref} {...rest} />
+      {showError && <p className="errorMessage">{errorMessage}</p>}
     </div>
   );
-};
+});
 
 export default CustomSelect;

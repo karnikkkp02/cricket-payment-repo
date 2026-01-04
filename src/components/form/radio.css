@@ -1,0 +1,43 @@
+.radioLabel {
+  color: #000;
+  font-size: 18px;
+  font-weight: 500;
+  margin-right: 10px;
+  text-transform: capitalize;
+}
+.customRadio {
+  left: -8px;
+  top: 3px;
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  border: 2px solid #a7a6b6;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+/* for inner filled circle */
+.customRadio::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  background: #2E7D32;
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.radioInput {
+  visibility: hidden;
+}
+.radioInput:checked + span:after {
+  opacity: 1;
+}
+
+.radioInput:checked + span {
+  border: 2px solid #2E7D32;
+}

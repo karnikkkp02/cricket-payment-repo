@@ -1,39 +1,23 @@
 import React from "react";
 import "./input.css"
-const Input = ({
-  label,
-  type = "text",
-  value,
-  onChange,
-  placeholder = "",
-  name,
-  id,
-  className = "",
-  error,
-  ...rest
-}) => {
+
+ const Input = React.forwardRef((props, ref) => {
+  const {
+    label,
+    parentInlineStyle,
+    errorMessage,
+    showError,
+    ...restInputProps
+  } = props;
   return (
-    <div className="input-wrapper">
-      {label && (
-        <label htmlFor={id || name} className="input-label">
-          {label}
-        </label>
-      )}
-
-      <input
-        id={id || name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        name={name}
-        className={`common-input ${error ? "input-error" : ""} ${className}`}
-        {...rest}
-      />
-
-      {error && <span className="error-text">{error}</span>}
+    <div className="inputContainer" style={parentInlineStyle}>
+      <label htmlFor={label} className="label">
+        {label}
+      </label>
+      <input className="input" ref={ref} {...restInputProps} />
+      {showError && <p className="errorMessage">{errorMessage}</p>}
     </div>
   );
-};
+});
 
 export default Input;
