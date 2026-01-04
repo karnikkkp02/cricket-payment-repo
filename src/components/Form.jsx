@@ -9,6 +9,9 @@ function Form() {
   const location = useLocation();
   const navigate = useNavigate();
   const paymentId = location.state?.paymentId || 'N/A';
+  const upiTransactionId = location.state?.upiTransactionId || paymentId;
+  const paymentMethod = location.state?.paymentMethod || 'N/A';
+  const vpa = location.state?.vpa || null;
 
   const [formData, setFormData] = useState({
     name: '',
@@ -59,6 +62,9 @@ function Form() {
 
     const dataToSend = {
       paymentId: paymentId,
+      upiTransactionId: upiTransactionId,
+      paymentMethod: paymentMethod,
+      vpa: vpa,
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
@@ -106,7 +112,14 @@ function Form() {
     <div className="form-container">
       <div className="form-content">
         <h1>Complete Your Registration</h1>
-        <p className="payment-info">Payment ID: {paymentId}</p>
+        <div className="payment-info">
+          <strong>UPI Transaction ID:</strong> {upiTransactionId}
+          {vpa && (
+            <div style={{ fontSize: '0.85em', marginTop: '0.25rem' }}>
+              <strong>UPI ID:</strong> {vpa}
+            </div>
+          )}
+        </div>
         <form onSubmit={handleSubmit} className="registration-form">
           <div className="form-group">
             <label htmlFor="name">Full Name *</label>
