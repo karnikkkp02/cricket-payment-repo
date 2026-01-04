@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Form.css';
+import Input from './form/input';
+import CustomSelect from './form/select';
+import { cityOptions } from '../utils/options';
 
 function Form() {
   const location = useLocation();
@@ -154,6 +157,14 @@ function Form() {
               rows="4"
               placeholder="Enter your address"
             />
+          </div>
+
+          <div>
+            <Input label="First Name"  />
+            <Input label="Father Name" />
+            <Input label="Date Of Birth" type='date' />
+            <Input label="Mobile No." type='number' />
+<CustomSelect label="City" options={cityOptions}/>
           </div>
 
           <button type="submit" className="submit-button" disabled={submitting}>
