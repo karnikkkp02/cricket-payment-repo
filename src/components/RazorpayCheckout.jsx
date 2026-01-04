@@ -55,13 +55,13 @@ function RazorpayCheckout() {
         return;
       }
       
-      const amount = 50000; // Amount in paise (500.00 INR)
+      const amount = 60000; // Amount in paise (500.00 INR)
 
       const options = {
         key: RAZORPAY_KEY_ID,
         amount: amount,
         currency: 'INR',
-        name: 'Cricket Payment',
+        name: '15 Gam KPS Cricket Tournament',
         description: 'Payment for Cricket Registration',
         config: {
           display: {

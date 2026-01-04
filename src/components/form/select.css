@@ -20,8 +20,7 @@
   }
   
   .common-select:focus {
-    border-color: #4f46e5;
-  }
+  border-color: #C5B8E8;
   
   .input-error {
     border-color: red;

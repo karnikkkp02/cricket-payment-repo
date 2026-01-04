@@ -4,6 +4,7 @@ import './Form.css';
 import Input from './form/input';
 import CustomSelect from './form/select';
 import { cityOptions } from '../utils/options';
+import cricketLogo from '../assets/cricket-logo.png';
 
 function Form() {
   const location = useLocation();
@@ -97,6 +98,7 @@ function Form() {
       <div className="form-container">
         <div className="form-content">
           <div className="success-message">
+            <img src={cricketLogo} alt="Cricket Logo" className="cricket-logo" />
             <h2>✓ Form Submitted Successfully!</h2>
             <p>Thank you for your submission. We'll get back to you soon.</p>
             <button onClick={() => navigate('/')} className="home-button">
@@ -111,6 +113,7 @@ function Form() {
   return (
     <div className="form-container">
       <div className="form-content">
+        <img src={cricketLogo} alt="Cricket Logo" className="cricket-logo" />
         <h1>Complete Your Registration</h1>
         <div className="payment-info">
           <strong>UPI Transaction ID:</strong> {upiTransactionId}

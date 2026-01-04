@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Error.css';
+import cricketLogo from '../assets/cricket-logo.png';
 
 function Error() {
   const location = useLocation();
@@ -13,6 +14,7 @@ function Error() {
   return (
     <div className="error-container">
       <div className="error-content">
+        <img src={cricketLogo} alt="Cricket Logo" className="cricket-logo" />
         <div className="error-icon">✗</div>
         <h1>Payment Failed</h1>
         <p className="error-message">
