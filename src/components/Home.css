@@ -96,40 +96,181 @@
   align-items: center;
 }
 
-/* Tablet Responsive */
-@media (max-width: 768px) {
+/* Large Tablets and Small Laptops */
+@media (max-width: 1024px) {
   .home-content {
-    padding: 2rem;
-    max-width: 100%;
+    max-width: 90%;
+    padding: 2.5rem 2rem;
   }
 
-  .home-content h1 {
-    font-size: 2rem;
+  .cricket-logo {
+    width: 150px;
+    height: 150px;
   }
 
-  .home-content p {
-    font-size: 1rem;
+  .home-content h2 {
+    font-size: 1.6rem;
+  }
+
+  .home-content h3 {
+    font-size: 1.35rem;
   }
 }
 
-/* Mobile Responsive */
+/* Tablets */
+@media (max-width: 768px) {
+  .home-content {
+    padding: 2rem 1.75rem;
+    max-width: 95%;
+    border-width: 2px;
+  }
+
+  .cricket-logo {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 1.25rem;
+  }
+
+  .home-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .home-content h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .home-content h4 {
+    font-size: 1.05rem;
+  }
+
+  .home-content h6 {
+    font-size: 1rem;
+  }
+
+  .home-content p {
+    font-size: 0.95rem;
+  }
+
+  .icon {
+    font-size: 1.1em;
+  }
+}
+
+/* Mobile Landscape */
+@media (max-width: 640px) and (orientation: landscape) {
+  .home-container {
+    padding: 0.75rem;
+  }
+
+  .home-content {
+    padding: 1.5rem;
+    max-width: 98%;
+  }
+
+  .cricket-logo {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1rem;
+  }
+
+  .home-content h2 {
+    font-size: 1.3rem;
+  }
+
+  .home-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .home-content p {
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* Mobile Portrait */
 @media (max-width: 480px) {
   .home-container {
     padding: 0.5rem;
   }
 
   .home-content {
-    padding: 1.5rem;
-    border-radius: 8px;
+    padding: 1.5rem 1.25rem;
+    border-radius: 12px;
+    border-width: 2px;
   }
 
-  .home-content h1 {
-    font-size: 1.75rem;
+  .cricket-logo {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 1rem;
+  }
+
+  .home-content h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .home-content h3 {
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+  }
+
+  .home-content h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .home-content h6 {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
   }
 
   .home-content p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     margin-bottom: 1.5rem;
+    margin-top: 8px;
+  }
+
+  .icon-text {
+    gap: 0.4rem;
+  }
+
+  .icon {
+    font-size: 1em;
+  }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 360px) {
+  .home-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .cricket-logo {
+    width: 90px;
+    height: 90px;
+  }
+
+  .home-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .home-content h3 {
+    font-size: 1.05rem;
+  }
+
+  .home-content h4 {
+    font-size: 0.9rem;
+  }
+
+  .home-content h6 {
+    font-size: 0.85rem;
+  }
+
+  .home-content p {
+    font-size: 0.85rem;
   }
 }
 
@@ -157,13 +298,37 @@
   background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
 }
 
-/* Mobile Responsive for Payment Link */
+/* Tablets - Payment Link */
+@media (max-width: 768px) {
+  .payment-link {
+    padding: 1rem 2.25rem;
+    font-size: 1.05rem;
+  }
+}
+
+/* Mobile Landscape - Payment Link */
+@media (max-width: 640px) and (orientation: landscape) {
+  .payment-link {
+    padding: 0.85rem 2rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile Portrait - Payment Link */
 @media (max-width: 480px) {
   .payment-link {
     width: 100%;
-    text-align: center;
-    padding: 0.875rem 2rem;
+    padding: 1rem 1.5rem;
     font-size: 1rem;
+    gap: 0.6rem;
+  }
+}
+
+/* Small Mobile - Payment Link */
+@media (max-width: 360px) {
+  .payment-link {
+    padding: 0.9rem 1.25rem;
+    font-size: 0.95rem;
   }
 }
 
