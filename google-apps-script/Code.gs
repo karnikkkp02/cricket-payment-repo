@@ -1,5 +1,7 @@
 // Google Apps Script for Cricket Payment Form
 // This script receives form data and writes it to Google Sheets
+// NOTE: Images are now stored in Cloudinary, not Google Drive
+// This script only receives and stores the Cloudinary URLs
 
 // IMPORTANT: Replace 'YOUR_SPREADSHEET_ID' with your actual Google Sheets ID
 const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID';
@@ -31,8 +33,8 @@ function doPost(e) {
         'Village',
         'Category',
         'T-Shirt Size',
-        'Photo Link',
-        'Payment Screenshot Link'
+        'Photo URL',
+        'Payment Screenshot URL'
       ]);
       
       // Format header row
@@ -42,19 +44,8 @@ function doPost(e) {
       headerRange.setFontColor('#ffffff');
     }
     
-    // Handle image uploads to Google Drive
-    let photoUrl = '';
-    let paymentScreenshotUrl = '';
-    
-    if (data.photo && data.photoName) {
-      photoUrl = uploadImageToDrive(data.photo, data.photoName, 'Cricket Form Photos');
-    }
-    
-    if (data.paymentScreenshot && data.paymentScreenshotName) {
-      paymentScreenshotUrl = uploadImageToDrive(data.paymentScreenshot, data.paymentScreenshotName, 'Cricket Payment Screenshots');
-    }
-    
     // Prepare the row data
+    // Note: Images are now uploaded to Cloudinary, so we just store the URLs
     const rowData = [
       data.submittedAt || new Date().toLocaleString(),
       data.paymentId || '',
@@ -68,8 +59,8 @@ function doPost(e) {
       data.village || '',
       data.categories || '',
       data.size || '',
-      photoUrl,
-      paymentScreenshotUrl
+      data.photoUrl || '',
+      data.paymentScreenshotUrl || ''
     ];
     
     // Append the data to the sheet
@@ -151,6 +142,7 @@ function getOrCreateFolder(folderName) {
 
 /**
  * Test function to verify the script works
+ * NOTE: photoUrl and paymentScreenshotUrl are now Cloudinary URLs
  */
 function testDoPost() {
   const testData = {
@@ -167,7 +159,9 @@ function testDoPost() {
         village: 'Test Village',
         categories: 'batting',
         size: 'M',
-        submittedAt: new Date().toLocaleString()
+        submittedAt: new Date().toLocaleString(),
+        photoUrl: 'https://res.cloudinary.com/demo/image/upload/sample.jpg',
+        paymentScreenshotUrl: 'https://res.cloudinary.com/demo/image/upload/sample.jpg'
       })
     }
   };
@@ -175,3 +169,41 @@ function testDoPost() {
   const result = doPost(testData);
   Logger.log(result.getContent());
 }
+
+// NOTE: The following functions are no longer needed with Cloudinary integration
+// Images are uploaded directly to Cloudinary from the frontend
+// Keep them commented out for reference if you want to switch back to Google Drive
+
+/*
+function uploadImageToDrive(base64Data, fileName, folderName) {
+  try {
+    const base64Content = base64Data.split(',')[1];
+    const blob = Utilities.newBlob(
+      Utilities.base64Decode(base64Content),
+      getMimeType(base64Data),
+      fileName
+    );
+    const folder = getOrCreateFolder(folderName);
+    const file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return file.getUrl();
+  } catch (error) {
+    Logger.log('Error uploading image: ' + error.toString());
+    return 'Upload failed';
+  }
+}
+
+function getMimeType(base64Data) {
+  const match = base64Data.match(/data:([^;]+);/);
+  return match ? match[1] : 'image/jpeg';
+}
+
+function getOrCreateFolder(folderName) {
+  const folders = DriveApp.getFoldersByName(folderName);
+  if (folders.hasNext()) {
+    return folders.next();
+  } else {
+    return DriveApp.createFolder(folderName);
+  }
+}
+*/

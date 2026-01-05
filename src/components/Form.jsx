@@ -7,6 +7,7 @@ import { cityOptions, VillageOptions } from "../utils/options";
 import cricketLogo from "../assets/cricket-logo.png";
 import Radio from "./form/radio";
 import { useState } from "react";
+import { uploadToCloudinary } from "../utils/cloudinary";
 
 function Form() {
   const location = useLocation();
@@ -42,15 +43,6 @@ function Form() {
     }
   };
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
   const sendToGoogleSheets = async (formData) => {
     const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL;
 
@@ -60,22 +52,26 @@ function Form() {
       throw new Error("Google Sheets URL not configured");
     }
 
-    // Convert images to base64
-    let photoBase64 = null;
-    let paymentScreenshotBase64 = null;
+    // Upload images to Cloudinary and get URLs
+    let photoUrl = null;
+    let paymentScreenshotUrl = null;
 
-    if (formData.photo && formData.photo[0]) {
-      console.log('Converting photo to base64, file size:', formData.photo[0].size, 'bytes');
-      photoBase64 = await convertToBase64(formData.photo[0]);
-      console.log('Photo base64 length:', photoBase64 ? photoBase64.length : 0);
-      console.log('Photo base64 preview:', photoBase64 ? photoBase64.substring(0, 50) + '...' : 'null');
-    }
+    try {
+      if (formData.photo && formData.photo[0]) {
+        console.log('Uploading photo to Cloudinary, file size:', formData.photo[0].size, 'bytes');
+        photoUrl = await uploadToCloudinary(formData.photo[0], 'cricket-form-photos');
+        console.log('Photo uploaded successfully:', photoUrl);
+      }
 
-    if (formData.paymentScreenshot && formData.paymentScreenshot[0]) {
-      console.log('Converting payment screenshot to base64, file size:', formData.paymentScreenshot[0].size, 'bytes');
-      paymentScreenshotBase64 = await convertToBase64(formData.paymentScreenshot[0]);
-      console.log('Payment screenshot base64 length:', paymentScreenshotBase64 ? paymentScreenshotBase64.length : 0);
-      console.log('Payment screenshot base64 preview:', paymentScreenshotBase64 ? paymentScreenshotBase64.substring(0, 50) + '...' : 'null');
+      if (formData.paymentScreenshot && formData.paymentScreenshot[0]) {
+        console.log('Uploading payment screenshot to Cloudinary, file size:', formData.paymentScreenshot[0].size, 'bytes');
+        paymentScreenshotUrl = await uploadToCloudinary(formData.paymentScreenshot[0], 'cricket-payment-screenshots');
+        console.log('Payment screenshot uploaded successfully:', paymentScreenshotUrl);
+      }
+    } catch (error) {
+      console.error("Error uploading images to Cloudinary:", error);
+      alert("Failed to upload images. Please try again.");
+      throw error;
     }
 
     const dataToSend = {
@@ -91,17 +87,11 @@ function Form() {
       categories: formData.categories,
       size: formData.size,
       submittedAt: new Date().toLocaleString(),
-      photo: photoBase64,
-      photoName: formData.photo ? formData.photo[0]?.name : null,
-      paymentScreenshot: paymentScreenshotBase64,
-      paymentScreenshotName: formData.paymentScreenshot ? formData.paymentScreenshot[0]?.name : null,
+      photoUrl: photoUrl,
+      paymentScreenshotUrl: paymentScreenshotUrl,
     };
     
-    console.log('Data to send:', {
-      ...dataToSend,
-      photo: dataToSend.photo ? dataToSend.photo.substring(0, 50) + '...' : null,
-      paymentScreenshot: dataToSend.paymentScreenshot ? dataToSend.paymentScreenshot.substring(0, 50) + '...' : null,
-    });
+    console.log('Data to send:', dataToSend);
 
     try {
       const response = await fetch(GOOGLE_SHEETS_URL, {
