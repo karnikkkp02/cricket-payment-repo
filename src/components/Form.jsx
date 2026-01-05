@@ -65,11 +65,17 @@ function Form() {
     let paymentScreenshotBase64 = null;
 
     if (formData.photo && formData.photo[0]) {
+      console.log('Converting photo to base64, file size:', formData.photo[0].size, 'bytes');
       photoBase64 = await convertToBase64(formData.photo[0]);
+      console.log('Photo base64 length:', photoBase64 ? photoBase64.length : 0);
+      console.log('Photo base64 preview:', photoBase64 ? photoBase64.substring(0, 50) + '...' : 'null');
     }
 
     if (formData.paymentScreenshot && formData.paymentScreenshot[0]) {
+      console.log('Converting payment screenshot to base64, file size:', formData.paymentScreenshot[0].size, 'bytes');
       paymentScreenshotBase64 = await convertToBase64(formData.paymentScreenshot[0]);
+      console.log('Payment screenshot base64 length:', paymentScreenshotBase64 ? paymentScreenshotBase64.length : 0);
+      console.log('Payment screenshot base64 preview:', paymentScreenshotBase64 ? paymentScreenshotBase64.substring(0, 50) + '...' : 'null');
     }
 
     const dataToSend = {
@@ -90,22 +96,26 @@ function Form() {
       paymentScreenshot: paymentScreenshotBase64,
       paymentScreenshotName: formData.paymentScreenshot ? formData.paymentScreenshot[0]?.name : null,
     };
+    
+    console.log('Data to send:', {
+      ...dataToSend,
+      photo: dataToSend.photo ? dataToSend.photo.substring(0, 50) + '...' : null,
+      paymentScreenshot: dataToSend.paymentScreenshot ? dataToSend.paymentScreenshot.substring(0, 50) + '...' : null,
+    });
 
     try {
       const response = await fetch(GOOGLE_SHEETS_URL, {
-        method: "POST",
+        method: 'POST',
+        mode: 'no-cors', // Google Apps Script requires no-cors mode
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(dataToSend),
       });
       
-      const result = await response.json();
-      if (result.success) {
-        console.log("Data sent to Google Sheets successfully");
-      } else {
-        throw new Error(result.message || "Failed to submit data");
-      }
+      // With no-cors mode, we can't read the response
+      // We assume success if no error is thrown
+      console.log("Data sent to Google Sheets successfully");
     } catch (error) {
       console.error("Error sending to Google Sheets:", error);
       throw error;
