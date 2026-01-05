@@ -42,7 +42,7 @@
 }
 
 .form-content h1 {
-  color: #2E7D32;
+  color: #1a1a1a;
   margin-bottom: 1.5rem;
   font-size: 2rem;
   text-align: center;
@@ -219,12 +219,12 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #43A047;
-  box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.15);
+  border-color: #333;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
 }
 
 .submit-button {
-  background: linear-gradient(135deg, #43A047 0%, #388E3C 100%);
+  background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
   color: white;
   border: none;
   padding: 1.1rem 2.5rem;
@@ -234,15 +234,15 @@
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 1.5rem;
-  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .submit-button:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
-  background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
 }
 
 .submit-button:disabled {
@@ -259,22 +259,38 @@
 .form-style{
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 .file-upload {
-  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .file-upload label {
   display: block;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  color: black;
+  margin-bottom: 8px;
+  line-height: 160%;
 }
 
 .file-upload input[type="file"] {
-  font-size: 1rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 12px 10px;
+  outline: none;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  width: 100%;
+}
+
+.file-upload input[type="file"]:focus {
+  border-color: #333;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 }
 
 .file-info {
@@ -296,11 +312,28 @@
   cursor: pointer;
 }
 
-
-.radio-tick{
+.form-field-group {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  width: 100%;
+}
+
+.form-field-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 8px;
+  line-height: 160%;
+}
+
+.radio-tick {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
 }
 
 
@@ -406,7 +439,7 @@
 }
 
 .success-message h2 {
-  color: #388E3C;
+  color: #1a1a1a;
   margin-bottom: 1rem;
   font-size: 2rem;
 }
@@ -461,7 +494,7 @@
 }
 
 .home-button {
-  background: linear-gradient(135deg, #43A047 0%, #388E3C 100%);
+  background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
   color: white;
   border: none;
   padding: 0.9rem 2.25rem;
@@ -470,15 +503,15 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .home-button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
-  background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
 }
 
 /* Tablets - Home Button */

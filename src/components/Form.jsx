@@ -1,314 +1,3 @@
-// import { useState } from "react";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import "./Form.css";
-// import Input from "./form/input";
-// import CustomSelect from "./form/select";
-// import { cityOptions, VillageOptions } from "../utils/options";
-// import cricketLogo from "../assets/cricket-logo.png";
-// import Radio from "./form/radio"; 
-
-// function Form() {
-//   const location = useLocation();
-//   const navigate = useNavigate();
-//   const paymentId = location.state?.paymentId || "N/A";
-//   const upiTransactionId = location.state?.upiTransactionId || paymentId;
-//   const categories = location.state?.categories || "N/A";
-//   const vpa = location.state?.vpa || null;
-
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     email: "",
-//     phone: "",
-//     address: "",
-//     photo: null, // Store the file object here
-//     categories: "Batting", // Added payment method state
-//     size: "XS"
-//   });
-
-//   const [submitted, setSubmitted] = useState(false);
-//   const [submitting, setSubmitting] = useState(false);
-//   const [errorMessage, setErrorMessage] = useState(""); // For error message
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-
-//     const allowedTypes = ["image/jpeg", "image/jpg", "image/hvc"];
-//     if (file && !allowedTypes.includes(file.type)) {
-//       setErrorMessage("Only JPG, JPEG, or HVC files are allowed.");
-//       setFormData((prev) => ({ ...prev, photo: null })); 
-//       return;
-//     }
-
-//     if (file && file.size > 5 * 1024 * 1024) {
-//       setErrorMessage("File size must be less than 5 MB.");
-//       setFormData((prev) => ({ ...prev, photo: null })); 
-//       return;
-//     }
-
-//     setErrorMessage(""); 
-//     setFormData((prev) => ({ ...prev, photo: file }));
-//   };
-
-//   const handleFileRemove = () => {
-//     setFormData((prev) => ({ ...prev, photo: null })); 
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setSubmitting(true);
-
-//     try {
-//       // Send data to Google Sheets
-//       await sendToGoogleSheets();
-
-//       console.log("Form submitted:", formData);
-//       console.log("Payment ID:", paymentId);
-
-//       setSubmitted(true);
-//     } catch (error) {
-//       console.error("Error submitting form:", error);
-//       alert("Failed to submit form. Please try again.");
-//     } finally {
-//       setSubmitting(false);
-//     }
-//   };
-
-//   const sendToGoogleSheets = async () => {
-//     const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL;
-
-//     if (!GOOGLE_SHEETS_URL) {
-//       console.error("Google Sheets URL not configured");
-//       alert(
-//         "Google Sheets integration is not configured. Please contact the administrator."
-//       );
-//       throw new Error("Google Sheets URL not configured");
-//     }
-
-//     const dataToSend = {
-//       paymentId: paymentId,
-//       upiTransactionId: upiTransactionId,
-//       categories: formData.categories, // Send the payment method data
-//       size:formData.size,
-//       vpa: vpa,
-//       name: formData.name,
-//       email: formData.email,
-//       phone: formData.phone,
-//       address: formData.address,
-//       submittedAt: new Date().toLocaleString(),
-//       photo: formData.photo ? formData.photo.name : null, // Send the file name or null
-//     };
-
-//     try {
-//       const response = await fetch(GOOGLE_SHEETS_URL, {
-//         method: "POST",
-//         mode: "no-cors", // Google Apps Script requires no-cors mode
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(dataToSend),
-//       });
-
-//       console.log("Data sent to Google Sheets successfully");
-//     } catch (error) {
-//       console.error("Error sending to Google Sheets:", error);
-//       throw error;
-//     }
-//   };
-
-//   if (submitted) {
-//     return (
-//       <div className="form-container">
-//         <div className="form-content">
-//           <div className="success-message">
-//             <img
-//               src={cricketLogo}
-//               alt="Cricket Logo"
-//               className="cricket-logo"
-//             />
-//             <h2>✓ Form Submitted Successfully!</h2>
-//             <p>Thank you for your submission. We'll get back to you soon.</p>
-//             <button onClick={() => navigate("/")} className="home-button">
-//               Go to Home
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="form-container">
-//       <div className="form-content">
-//         <img src={cricketLogo} alt="Cricket Logo" className="cricket-logo" />
-//         <h1>Complete Your Registration</h1>
-//         <div className="payment-info">
-//           <strong>UPI Transaction ID:</strong> {upiTransactionId}
-//           {vpa && (
-//             <div style={{ fontSize: "0.85em", marginTop: "0.25rem" }}>
-//               <strong>UPI ID:</strong> {vpa}
-//             </div>
-//           )}
-//         </div>
-//         <form onSubmit={handleSubmit} className="registration-form">
-//           <div className="form-style">
-//             <Input label="First Name" />
-//             <Input label="Father Name" />
-//             <Input label="Date Of Birth" type="date" />
-//             <Input label="Mobile No." type="number" />
-//             <CustomSelect
-//               label="City"
-//               options={cityOptions}
-//               placeholder="Select City"
-//             />
-//             <CustomSelect
-//               label="Village"
-//               options={VillageOptions}
-//               placeholder="Select Village"
-//             />
-
-//             {/* Add photo upload input here */}
-//             <div className="file-upload">
-//               <label htmlFor="photo">Upload Your Photo</label>
-//               <input
-//                 type="file"
-//                 id="photo"
-//                 name="photo"
-//                 accept="image/jpeg, image/jpg, image/hvc"
-//                 onChange={handleFileChange}
-//               />
-//               {/* Display file name when a file is selected */}
-//               {formData.photo ? (
-//                 <div className="file-info">
-//                   <span>{formData.photo.name}</span>
-//                   <button
-//                     type="button"
-//                     className="remove-file"
-//                     onClick={handleFileRemove}
-//                   >
-//                     ✕
-//                   </button>
-//                 </div>
-//               ) : null}
-
-//               {errorMessage && <p className="error-messages">{errorMessage}</p>}
-//             </div>
-
-//             {/* Add Radio Button for  Categories*/}
-//             <div className="categories-method">
-//               <label style={{ color: 'black', fontWeight:"600" }}>Select Categories</label>
-//               <div className="radio-tick">
-
-//               <Radio
-//                 name="Batting"
-//                 value="batting"
-//                 label="Batting"
-//                 checked={formData.categories === "batting"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="Bowling"
-//                 value="bowling"
-//                 label="Bowling"
-//                 checked={formData.categories === "bowling"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="All-Rounder"
-//                 value="all-rounder"
-//                 label="All-Rounder"
-//                 checked={formData.categories === "all-Rounder"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="Wicket-Keeper"
-//                 value="wicket-Keeper"
-//                 label="Wicket-Keeper"
-//                 checked={formData.categories === "wicket-Keeper"}
-//                 onChange={handleChange}
-//               />
-//               </div>
-//               {/* Add Radio Button for  T-shirt*/}
-//             <div>
-//               <label style={{ color: 'black', fontWeight:"600" }}>Select T-shirt Size</label>
-//               <div className="radio-tick">
-
-//               <Radio
-//                 name="XS"
-//                 value="xs"
-//                 label="XS"
-//                 checked={formData.categories === "xs"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="S"
-//                 value="s"
-//                 label="S"
-//                 checked={formData.categories === "s"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="M"
-//                 value="m"
-//                 label="M"
-//                 checked={formData.categories === "m"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="L"
-//                 value="l"
-//                 label="L"
-//                 checked={formData.categories === "l"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="XL"
-//                 value="xl"
-//                 label="XL"
-//                 checked={formData.categories === "xl"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="XXL"
-//                 value="xxl"
-//                 label="XXL"
-//                 checked={formData.categories === "xxl"}
-//                 onChange={handleChange}
-//               />
-//               <Radio
-//                 name="XXXL"
-//                 value="xxxl"
-//                 label="XXXL"
-//                 checked={formData.categories === "xxxl"}
-//                 onChange={handleChange}
-//               />
-//               </div>
-
-// </div>
-          
-
-//             </div>
-//           </div>
-
-//           <button type="submit" className="submit-button" disabled={submitting}>
-//             {submitting ? "Submitting..." : "Submit"}
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Form;
-
-
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Form.css";
@@ -378,6 +67,7 @@ function Form() {
       size: formData.size,
       submittedAt: new Date().toLocaleString(),
       photo: formData.photo ? formData.photo[0]?.name : null,
+      paymentScreenshot: formData.paymentScreenshot ? formData.paymentScreenshot[0]?.name : null,
     };
 
     try {
@@ -431,7 +121,8 @@ function Form() {
             {/* First Name Field */}
            {/* First Name Field */}
 <Input
-  label="First Name"
+  label="Your Name"
+  required
   {...register("name", {
     required: "First Name is required",
     maxLength: {
@@ -452,6 +143,7 @@ function Form() {
 {/* Father Name Field */}
 <Input
   label="Father Name"
+  required
   {...register("fatherName", {
     required: "Father Name is required",
     maxLength: {
@@ -472,6 +164,7 @@ function Form() {
             {/* Date Of Birth Field */}
             <Input
               label="Date Of Birth"
+              required
               type="date"
               {...register("dob", { required: "Date of Birth is required" })}
             />
@@ -480,6 +173,7 @@ function Form() {
             {/* Mobile Number Field */}
             <Input
   label="Mobile No."
+  required
   type="number"
   {...register("phone", {
     required: "Mobile number is required",
@@ -505,6 +199,7 @@ function Form() {
             {/* City Select Field */}
             <CustomSelect
               label="City"
+              required
               options={cityOptions}
               placeholder="Select City"
               {...register("city", { required: "City is required" })}
@@ -516,6 +211,7 @@ function Form() {
             {/* Village Select Field */}
             <CustomSelect
               label="Village"
+              required
               options={VillageOptions}
               placeholder="Select Village"
               {...register("village", { required: "Village is required" })}
@@ -526,7 +222,7 @@ function Form() {
 
             {/* Photo Upload Field */}
             <div className="file-upload">
-              <label htmlFor="photo">Upload Your Photo</label>
+              <label htmlFor="photo">Upload Your Photo <span style={{ color: 'red' }}>*</span></label>
               <input
                 type="file"
                 id="photo"
@@ -552,15 +248,15 @@ function Form() {
               {errors.photo && <p className="error-messages">{errors.photo.message}</p>}
             </div>
 
-            {/* Categories Selection */}
-            <div className="categories-method">
-              <label style={{ color: 'black', fontWeight: "600" }}>Select Categories</label>
+            {/* Categories Selection */
+            <div className="form-field-group">
+              <label className="form-field-label">Select Categories <span style={{ color: 'red' }}>*</span></label>
               <div className="radio-tick">
                 <Radio
                   name="categories"
                   value="batting"
                   label="Batting"
-                  {...register("categories")}
+                  {...register("categories", { required: "Please select a category" })}
                   checked={watch("categories") === "batting"}
                 />
                 <Radio
@@ -585,17 +281,18 @@ function Form() {
                   checked={watch("categories") === "wicket-keeper"}
                 />
               </div>
+              {errors.categories && <p className="error-messages">{errors.categories.message}</p>}
             </div>
-
-            {/* T-shirt Size Selection */}
-            <div>
-              <label style={{ color: 'black', fontWeight: "600" }}>Select T-shirt Size</label>
+}
+            
+            <div className="form-field-group">
+              <label className="form-field-label">Select T-shirt Size <span style={{ color: 'red' }}>*</span></label>
               <div className="radio-tick">
                 <Radio
                   name="size"
                   value="xs"
                   label="XS"
-                  {...register("size")}
+                  {...register("size", { required: "Please select a T-shirt size" })}
                   checked={watch("size") === "xs"}
                 />
                 <Radio
@@ -641,6 +338,36 @@ function Form() {
                   checked={watch("size") === "xxxl"}
                 />
               </div>
+              {errors.size && <p className="error-messages">{errors.size.message}</p>}
+            </div>
+
+            {/* Payment Screenshot Upload Field */}
+            <div className="file-upload">
+              <label htmlFor="paymentScreenshot">Upload screenshot of payment (with transaction details) <span style={{ color: 'red' }}>*</span></label>
+              <input
+                type="file"
+                id="paymentScreenshot"
+                accept="image/*"
+                {...register("paymentScreenshot", {
+                  required: "Payment screenshot is required",
+                  validate: {
+                    maxSize: (value) => {
+                      if (value[0]?.size > 5 * 1024 * 1024) {
+                        return "File size must be less than 5 MB.";
+                      }
+                      return true;
+                    },
+                    fileType: (value) => {
+                      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+                      if (!allowedTypes.includes(value[0]?.type)) {
+                        return "Only image files (JPG, JPEG, PNG, GIF, WEBP) are allowed.";
+                      }
+                      return true;
+                    },
+                  },
+                })}
+              />
+              {errors.paymentScreenshot && <p className="error-messages">{errors.paymentScreenshot.message}</p>}
             </div>
           </div>
 

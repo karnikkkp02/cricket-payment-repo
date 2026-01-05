@@ -7,12 +7,13 @@ import "./input.css"
     parentInlineStyle,
     errorMessage,
     showError,
+    required,
     ...restInputProps
   } = props;
   return (
     <div className="inputContainer" style={parentInlineStyle}>
       <label htmlFor={label} className="label">
-        {label}
+        {label} {required && <span style={{ color: 'red' }}>*</span>}
       </label>
       <input className="input" ref={ref} {...restInputProps} />
       {showError && <p className="errorMessage">{errorMessage}</p>}

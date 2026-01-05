@@ -41,7 +41,7 @@
 }
 
 .home-content h2 {
-  color: #2E7D32;
+  color: #1a1a1a;
   margin-bottom: 0.5rem;
   font-size: 1.8rem;
   font-weight: 700;
@@ -49,7 +49,7 @@
 }
 
 .home-content h3 {
-  color: #388E3C;
+  color: #1a1a1a;
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
   font-weight: 600;
@@ -279,7 +279,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  background: linear-gradient(135deg, #43A047 0%, #388E3C 100%);
+  background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
   color: white;
   padding: 1.1rem 2.75rem;
   text-decoration: none;
@@ -287,15 +287,15 @@
   font-size: 1.15rem;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .payment-link:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
-  background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
 }
 
 /* Tablets - Payment Link */
