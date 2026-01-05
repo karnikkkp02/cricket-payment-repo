@@ -9,11 +9,19 @@ Follow these steps to set up Google Sheets integration:
 3. Name it "Cricket Registrations" (or any name you prefer)
 4. In the first row, add these headers:
    - A1: `Payment ID`
-   - B1: `Full Name`
-   - C1: `Email`
-   - D1: `Phone`
-   - E1: `Address`
-   - F1: `Submitted At`
+   - B1: `UPI Transaction ID`
+   - C1: `VPA`
+   - D1: `Name`
+   - E1: `Father Name`
+   - F1: `Date of Birth`
+   - G1: `Mobile No.`
+   - H1: `City`
+   - I1: `Village`
+   - J1: `Categories`
+   - K1: `T-Shirt Size`
+   - L1: `Photo`
+   - M1: `Payment Screenshot`
+   - N1: `Submitted At`
 
 ## Step 2: Create Google Apps Script
 
@@ -30,13 +38,60 @@ function doPost(e) {
     // Parse the incoming data
     var data = JSON.parse(e.postData.contents);
     
+    // Create a folder in Google Drive to store images (if not exists)
+    var folderName = "Cricket Registration Images";
+    var folders = DriveApp.getFoldersByName(folderName);
+    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+    
+    // Upload photo to Google Drive if provided
+    var photoUrl = "No photo";
+    if (data.photo && data.photoName) {
+      try {
+        var photoBlob = Utilities.newBlob(
+          Utilities.base64Decode(data.photo.split(',')[1]),
+          'image/jpeg',
+          data.photoName
+        );
+        var photoFile = folder.createFile(photoBlob);
+        photoFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+        photoUrl = photoFile.getUrl();
+      } catch (error) {
+        photoUrl = "Error uploading photo: " + error.toString();
+      }
+    }
+    
+    // Upload payment screenshot to Google Drive if provided
+    var paymentScreenshotUrl = "No screenshot";
+    if (data.paymentScreenshot && data.paymentScreenshotName) {
+      try {
+        var screenshotBlob = Utilities.newBlob(
+          Utilities.base64Decode(data.paymentScreenshot.split(',')[1]),
+          'image/jpeg',
+          data.paymentScreenshotName
+        );
+        var screenshotFile = folder.createFile(screenshotBlob);
+        screenshotFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+        paymentScreenshotUrl = screenshotFile.getUrl();
+      } catch (error) {
+        paymentScreenshotUrl = "Error uploading screenshot: " + error.toString();
+      }
+    }
+    
     // Append the data as a new row
     sheet.appendRow([
       data.paymentId,
+      data.upiTransactionId,
+      data.vpa,
       data.name,
-      data.email,
+      data.fatherName,
+      data.dob,
       data.phone,
-      data.address,
+      data.city,
+      data.village,
+      data.categories,
+      data.size,
+      photoUrl,
+      paymentScreenshotUrl,
       data.submittedAt
     ]);
     

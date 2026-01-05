@@ -42,6 +42,15 @@ function Form() {
     }
   };
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const sendToGoogleSheets = async (formData) => {
     const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL;
 
@@ -51,11 +60,21 @@ function Form() {
       throw new Error("Google Sheets URL not configured");
     }
 
+    // Convert images to base64
+    let photoBase64 = null;
+    let paymentScreenshotBase64 = null;
+
+    if (formData.photo && formData.photo[0]) {
+      photoBase64 = await convertToBase64(formData.photo[0]);
+    }
+
+    if (formData.paymentScreenshot && formData.paymentScreenshot[0]) {
+      paymentScreenshotBase64 = await convertToBase64(formData.paymentScreenshot[0]);
+    }
+
     const dataToSend = {
       paymentId: paymentId,
       upiTransactionId: upiTransactionId,
-      categories: formData.categories,
-      size: formData.size,
       vpa: vpa,
       name: formData.name,
       fatherName: formData.fatherName,
@@ -66,20 +85,27 @@ function Form() {
       categories: formData.categories,
       size: formData.size,
       submittedAt: new Date().toLocaleString(),
-      photo: formData.photo ? formData.photo[0]?.name : null,
-      paymentScreenshot: formData.paymentScreenshot ? formData.paymentScreenshot[0]?.name : null,
+      photo: photoBase64,
+      photoName: formData.photo ? formData.photo[0]?.name : null,
+      paymentScreenshot: paymentScreenshotBase64,
+      paymentScreenshotName: formData.paymentScreenshot ? formData.paymentScreenshot[0]?.name : null,
     };
 
     try {
       const response = await fetch(GOOGLE_SHEETS_URL, {
         method: "POST",
-        mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(dataToSend),
       });
-      console.log("Data sent to Google Sheets successfully");
+      
+      const result = await response.json();
+      if (result.success) {
+        console.log("Data sent to Google Sheets successfully");
+      } else {
+        throw new Error(result.message || "Failed to submit data");
+      }
     } catch (error) {
       console.error("Error sending to Google Sheets:", error);
       throw error;
