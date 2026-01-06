@@ -46,8 +46,20 @@ function doPost(e) {
     
     // Prepare the row data
     // Note: Images are now uploaded to Cloudinary, so we just store the URLs
+    // Format timestamp consistently as DD/MM/YYYY HH:mm:ss
+    const formatTimestamp = () => {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    };
+    
     const rowData = [
-      data.submittedAt || new Date().toLocaleString(),
+      data.submittedAt || formatTimestamp(),
       data.paymentId || '',
       data.upiTransactionId || '',
       data.vpa || '',

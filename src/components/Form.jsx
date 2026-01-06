@@ -74,6 +74,16 @@ function Form() {
       throw error;
     }
 
+    // Format timestamp consistently as DD/MM/YYYY HH:mm:ss
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const formattedTimestamp = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+
     const dataToSend = {
       paymentId: paymentId,
       upiTransactionId: upiTransactionId,
@@ -86,7 +96,7 @@ function Form() {
       village: formData.village,
       categories: formData.categories,
       size: formData.size,
-      submittedAt: new Date().toLocaleString(),
+      submittedAt: formattedTimestamp,
       photoUrl: photoUrl,
       paymentScreenshotUrl: paymentScreenshotUrl,
     };
