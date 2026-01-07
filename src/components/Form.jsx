@@ -12,8 +12,14 @@ import { uploadToCloudinary } from "../utils/cloudinary";
 function Form() {
   const location = useLocation();
   const navigate = useNavigate();
-  const paymentId = location.state?.paymentId || "N/A";
-  const upiTransactionId = location.state?.upiTransactionId || paymentId;
+  
+  // Get payment details from URL query parameters (sent by Razorpay after successful payment)
+  const urlParams = new URLSearchParams(window.location.search);
+  const razorpayPaymentId = urlParams.get('razorpay_payment_id') || location.state?.paymentId || "N/A";
+  const razorpayPaymentLinkId = urlParams.get('razorpay_payment_link_id') || "N/A";
+  
+  const paymentId = razorpayPaymentId;
+  const upiTransactionId = paymentId; // For payment pages, use payment ID as transaction reference
   const vpa = location.state?.vpa || null;
 
   const {

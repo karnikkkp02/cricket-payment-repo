@@ -1,13 +1,18 @@
-import { useNavigate } from 'react-router-dom';
 import './Payment.css';
 import cricketLogo from '../assets/cricket-logo.png';
 
 function Payment() {
-  const navigate = useNavigate();
-
   const handlePayment = () => {
-    // Navigate to Razorpay checkout page
-    navigate('/razorpay');
+    // Get the Razorpay Payment Page URL from environment variable
+    const RAZORPAY_PAYMENT_PAGE_URL = import.meta.env.VITE_RAZORPAY_PAYMENT_PAGE_URL;
+    
+    if (!RAZORPAY_PAYMENT_PAGE_URL) {
+      alert('Payment page is not configured. Please contact the administrator.');
+      return;
+    }
+    
+    // Redirect to Razorpay Payment Page
+    window.location.href = RAZORPAY_PAYMENT_PAGE_URL;
   };
 
   return (
