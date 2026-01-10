@@ -12,15 +12,6 @@ import { uploadToCloudinary } from "../utils/cloudinary";
 function Form() {
   const location = useLocation();
   const navigate = useNavigate();
-  
-  // Get payment details from URL query parameters (sent by Razorpay after successful payment)
-  const urlParams = new URLSearchParams(window.location.search);
-  const razorpayPaymentId = urlParams.get('razorpay_payment_id') || location.state?.paymentId || "N/A";
-  const razorpayPaymentLinkId = urlParams.get('razorpay_payment_link_id') || "N/A";
-  
-  const paymentId = razorpayPaymentId;
-  const upiTransactionId = paymentId; // For payment pages, use payment ID as transaction reference
-  const vpa = location.state?.vpa || null;
 
   //Adds comment
   const {
@@ -32,7 +23,6 @@ function Form() {
   } = useForm();
 
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const onSubmit = async (data) => {
 
@@ -41,7 +31,8 @@ function Form() {
 
     try {
       await sendToGoogleSheets(data);
-      setSubmitted(true);
+      // After successful form submission, redirect to payment page
+      navigate('/payment');
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Failed to submit form. Please try again.");
@@ -61,19 +52,12 @@ function Form() {
 
     // Upload images to Cloudinary and get URLs
     let photoUrl = null;
-    let paymentScreenshotUrl = null;
 
     try {
       if (formData.photo && formData.photo[0]) {
         console.log('Uploading photo to Cloudinary, file size:', formData.photo[0].size, 'bytes');
         photoUrl = await uploadToCloudinary(formData.photo[0], 'cricket-form-photos');
         console.log('Photo uploaded successfully:', photoUrl);
-      }
-
-      if (formData.paymentScreenshot && formData.paymentScreenshot[0]) {
-        console.log('Uploading payment screenshot to Cloudinary, file size:', formData.paymentScreenshot[0].size, 'bytes');
-        paymentScreenshotUrl = await uploadToCloudinary(formData.paymentScreenshot[0], 'cricket-payment-screenshots');
-        console.log('Payment screenshot uploaded successfully:', paymentScreenshotUrl);
       }
     } catch (error) {
       console.error("Error uploading images to Cloudinary:", error);
@@ -92,9 +76,6 @@ function Form() {
     const formattedTimestamp = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
     const dataToSend = {
-      paymentId: paymentId,
-      upiTransactionId: upiTransactionId,
-      vpa: vpa,
       name: formData.name,
       fatherName: formData.fatherName,
       dob: formData.dob,
@@ -105,7 +86,9 @@ function Form() {
       size: formData.size,
       submittedAt: formattedTimestamp,
       photoUrl: photoUrl,
-      paymentScreenshotUrl: paymentScreenshotUrl,
+      paymentId: "Pending",
+      upiTransactionId: "Pending",
+      vpa: "Pending",
     };
     
     console.log('Data to send:', dataToSend);
@@ -129,36 +112,12 @@ function Form() {
     }
   };
 
-  if (submitted) {
-    return (
-      <div className="form-container">
-        <div className="form-content">
-          <div className="success-message">
-            <img src={cricketLogo} alt="Cricket Logo" className="cricket-logo" />
-            <h2>✓ Form Submitted Successfully!</h2>
-            <p>Thank you for your submission. We'll get back to you soon.</p>
-            <button onClick={() => navigate("/")} className="home-button">
-              Go to Home
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="form-container">
       <div className="form-content">
         <img src={cricketLogo} alt="Cricket Logo" className="cricket-logo" />
-        <h1>Complete Your Registration</h1>
-        <div className="payment-info">
-          <strong>UPI Transaction ID:</strong> {upiTransactionId}
-          {vpa && (
-            <div style={{ fontSize: "0.85em", marginTop: "0.25rem" }}>
-              <strong>UPI ID:</strong> {vpa}
-            </div>
-          )}
-        </div>
+        <h1>Registration Form</h1>
+        <p style={{ textAlign: 'center', marginBottom: '20px', color: '#666' }}>Please fill in your details. You will proceed to payment after submission.</p>
         <form onSubmit={handleSubmit(onSubmit)} className="registration-form">
           <div className="form-style">
             {/* First Name Field */}
@@ -383,39 +342,10 @@ function Form() {
               </div>
               {errors.size && <p className="error-messages">{errors.size.message}</p>}
             </div>
-
-            {/* Payment Screenshot Upload Field */}
-            <div className="file-upload">
-              <label htmlFor="paymentScreenshot">Upload screenshot of payment (with transaction details) <span style={{ color: 'red' }}>*</span></label>
-              <input
-                type="file"
-                id="paymentScreenshot"
-                accept="image/*"
-                {...register("paymentScreenshot", {
-                  required: "Payment screenshot is required",
-                  validate: {
-                    maxSize: (value) => {
-                      if (value[0]?.size > 5 * 1024 * 1024) {
-                        return "File size must be less than 5 MB.";
-                      }
-                      return true;
-                    },
-                    fileType: (value) => {
-                      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
-                      if (!allowedTypes.includes(value[0]?.type)) {
-                        return "Only image files (JPG, JPEG, PNG, GIF, WEBP) are allowed.";
-                      }
-                      return true;
-                    },
-                  },
-                })}
-              />
-              {errors.paymentScreenshot && <p className="error-messages">{errors.paymentScreenshot.message}</p>}
-            </div>
           </div>
 
           <button type="submit" className="submit-button" disabled={submitting}>
-            {submitting ? "Submitting..." : "Submit"}
+            {submitting ? "Submitting..." : "Submit & Proceed to Payment"}
           </button>
         </form>
       </div>
