@@ -27,6 +27,10 @@ export const VillageOptions = [
     value: "Asloj",
   },
   {
+    label:"mithadharva",
+    value: "mithadharva",
+  },
+  {
     label: "Chanasma",
     value: "Chanasma",
   },
@@ -98,5 +102,6 @@ export const VillageOptions = [
   {
     label: "Others",
     value: "Others",
-  },
+  }
+ 
 ];
