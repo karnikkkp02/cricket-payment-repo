@@ -86,9 +86,9 @@ function Form() {
       size: formData.size,
       submittedAt: formattedTimestamp,
       photoUrl: photoUrl,
-      paymentId: "Pending",
-      upiTransactionId: "Pending",
-      vpa: "Pending",
+      paymentId: "N/A",
+      upiTransactionId: "N/A",
+      vpa: "",
     };
     
     console.log('Data to send:', dataToSend);
