@@ -23,13 +23,13 @@ function Home() {
         </h6>
         <p>
           <span className="icon-text">
-            <span className="icon">�</span>
-            Click the link below to fill the registration form
+            <span className="icon">💳</span>
+            Click the link below to proceed with payment
           </span>
         </p>
-        <Link to="/form" className="payment-link">
+        <Link to="/payment" className="payment-link">
           <span className="icon">🏏</span>
-          Start Registration
+          Proceed to Payment
         </Link>
       </div>
     </div>
